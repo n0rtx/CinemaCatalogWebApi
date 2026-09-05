@@ -1,0 +1,16 @@
+{
+  "ConnectionStrings": {
+    "DatabaseConnection": "Your connection string."
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "Omdb": {
+    "ApiKey": "Your API key.",
+    "BaseUrl": "https://www.omdbapi.com/"
+  }
+}

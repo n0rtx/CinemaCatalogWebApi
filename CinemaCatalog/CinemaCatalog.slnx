@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src/CinemaCatalog.Application/CinemaCatalog.Application.csproj" />
+  <Project Path="src/CinemaCatalog.Domain/CinemaCatalog.Domain.csproj" />
+  <Project Path="src/CinemaCatalog.Infrastructure/CinemaCatalog.Infrastructure.csproj" />
+  <Project Path="src/CinemaCatalog.WebApi/CinemaCatalog.WebApi.csproj" />
+</Solution>
