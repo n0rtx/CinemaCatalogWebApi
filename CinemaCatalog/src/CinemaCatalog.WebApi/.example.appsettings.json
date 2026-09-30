@@ -1,6 +1,7 @@
 {
-  "ConnectionStrings": {
-    "DatabaseConnection": "Your connection string."
+  "Firebase": {
+    "ProjectId": "firebase-project-id",
+    "CredentialsPath": "../secrets/firebase.json"
   },
   "Logging": {
     "LogLevel": {
@@ -10,7 +11,7 @@
   },
   "AllowedHosts": "*",
   "Omdb": {
-    "ApiKey": "Your API key.",
+    "ApiKey": "Your API key",
     "BaseUrl": "https://www.omdbapi.com/"
   }
 }

@@ -25,7 +25,7 @@ public class FirestoreMovieRepository : IMovieRepository
 
     public async Task<int> CountAsync(CancellationToken ct)
     {
-        var snapshot = await _db.Collection(Collection).Count().GetAggregationAsync(ct);
+        var snapshot = await _db.Collection(Collection).Count().GetSnapshotAsync(ct);
         return (int)(snapshot.Count ?? 0);
     }
 
@@ -77,7 +77,7 @@ public class FirestoreMovieRepository : IMovieRepository
             Plot = d.GetValueOrDefault("Plot")?.ToString() ?? "",
             Director = d.GetValueOrDefault("Director")?.ToString() ?? "",
             Genre = d.GetValueOrDefault("Genre")?.ToString() ?? "",
-            ReleaseYear = new Year(Convert.ToInt32(d.GetValueOrDefault("ReleaseYear") ?? 0)),
+            ReleaseYear = Year.Parse((d.GetValueOrDefault("ReleaseYear") ?? 0).ToString()),
             Poster = d.GetValueOrDefault("Poster")?.ToString()
         };
     }
@@ -89,7 +89,7 @@ public class FirestoreMovieRepository : IMovieRepository
         ["Plot"] = m.Plot,
         ["Director"] = m.Director,
         ["Genre"] = m.Genre,
-        ["ReleaseYear"] = m.ReleaseYear.Value,
+        ["ReleaseYear"] = m.ReleaseYear.ToString(),
         ["Poster"] = m.Poster ?? (object)FieldValue.Delete
     };
 }

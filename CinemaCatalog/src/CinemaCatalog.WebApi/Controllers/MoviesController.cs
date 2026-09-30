@@ -12,18 +12,19 @@ public class MoviesController(IMovieService movieService, IEntityDisplayer<Movie
     private string BaseUrl => $"{Request.Scheme}://{Request.Host}";
 
     private IMovieService MovieService { get; } = movieService;
-
     private IEntityDisplayer<Movie> EntityDisplayer { get; } = entityDisplayer;
 
     [HttpGet]
-    public async Task<ActionResult<PagedMovieResponse>> GetAllAsync(CancellationToken cancellationToken, int page = 1)
+    public async Task<ActionResult<PagedMovieResponse>> GetAllAsync(
+        CancellationToken cancellationToken,
+        int page = 1)
     {
         if (page < 1) page = 1;
 
         int amountOfPages = await EntityDisplayer.CountPagesAsync(cancellationToken);
         var movies = await EntityDisplayer.GetPagedEntitiesAsync(page, cancellationToken);
 
-        return Ok(new PagedMovieResponse()
+        return Ok(new PagedMovieResponse
         {
             Page = page,
             TotalPages = amountOfPages,
@@ -32,34 +33,40 @@ public class MoviesController(IMovieService movieService, IEntityDisplayer<Movie
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<MovieDto>> SearchByTitleAsync([FromQuery] string? title,
+    public async Task<ActionResult<MovieDto>> SearchByTitleAsync(
+        [FromQuery] string? title,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(title)) return BadRequest("No title has been provided.");
+        if (string.IsNullOrWhiteSpace(title))
+            return BadRequest("No title has been provided.");
 
         var movie = await MovieService.FindOrFetchByTitleAsync(title, cancellationToken);
 
-        if (movie is null) return NotFound($"No movie the title \"{title}\" was found.");
+        if (movie is null)
+            return NotFound($"No movie with the title \"{title}\" was found.");
 
         return Ok(movie.ToDto(BaseUrl));
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<MovieDto>> GetByIdAsync(int id, CancellationToken cancellationToken)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<MovieDto>> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         var movie = await MovieService.GetByIdAsync(id, cancellationToken);
 
-        if (movie is null) return NotFound();
+        if (movie is null)
+            return NotFound();
 
         return Ok(movie.ToDto(BaseUrl));
     }
 
     [HttpPost]
-    public async Task<ActionResult<MovieDto>> CreateAsync([FromForm] CreateMovieDto createMovieDto,
+    public async Task<ActionResult<MovieDto>> CreateAsync(
+        [FromForm] CreateMovieDto createMovieDto,
         [FromForm] IFormFile? formFile,
         CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid) return ValidationProblem(ModelState);
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
 
         var movie = createMovieDto.ToEntity();
 
@@ -72,14 +79,21 @@ public class MoviesController(IMovieService movieService, IEntityDisplayer<Movie
             return Conflict(ex.Message);
         }
 
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = movie.Id }, movie.ToDto(BaseUrl));
+        return CreatedAtAction(
+            nameof(GetByIdAsync),
+            new { id = movie.Id },
+            movie.ToDto(BaseUrl));
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateAsync(int id, [FromForm] UpdateMovieDto updateMovieDto,
-        [FromForm] IFormFile? formFile, CancellationToken cancellationToken)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAsync(
+        string id,
+        [FromForm] UpdateMovieDto updateMovieDto,
+        [FromForm] IFormFile? formFile,
+        CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid) return ValidationProblem(ModelState);
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
 
         var movie = updateMovieDto.ToEntity(id);
 
@@ -99,8 +113,8 @@ public class MoviesController(IMovieService movieService, IEntityDisplayer<Movie
         return NoContent();
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteAsync(int id, CancellationToken cancellationToken)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(string id, CancellationToken cancellationToken)
     {
         try
         {
@@ -110,7 +124,7 @@ public class MoviesController(IMovieService movieService, IEntityDisplayer<Movie
         {
             return NotFound();
         }
-        
+
         return NoContent();
     }
 }
