@@ -1,5 +1,17 @@
 {
-  "ConnectionStrings": {
-    "DatabaseConnection": "Your connection string."
+  "Firebase": {
+    "ProjectId": "your-firebase-project-id",
+    "CredentialsPath": "path/to/service-account.json"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "Omdb": {
+    "ApiKey": "Your API key.",
+    "BaseUrl": "https://www.omdbapi.com/"
   }
 }

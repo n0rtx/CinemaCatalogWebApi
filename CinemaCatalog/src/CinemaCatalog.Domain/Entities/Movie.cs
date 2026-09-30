@@ -6,7 +6,7 @@ namespace CinemaCatalog.Domain.Entities;
 
 public class Movie
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Please enter a movie title")]
     [StringLength(100, MinimumLength = 1, ErrorMessage = "Title must be between 1 and 100 characters")]

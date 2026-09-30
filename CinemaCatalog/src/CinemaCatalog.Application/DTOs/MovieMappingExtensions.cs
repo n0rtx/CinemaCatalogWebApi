@@ -32,7 +32,7 @@ public static class MovieMappingExtensions
         };
     }
 
-    public static Movie ToEntity(this UpdateMovieDto dto, int id)
+    public static Movie ToEntity(this UpdateMovieDto dto, string id)
     {
         return new Movie
         {
