@@ -22,6 +22,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\CinemaCatalog.Application\CinemaCatalog.Application.csproj"/>
+        <ProjectReference Include="..\CinemaCatalog.Common\CinemaCatalog.Common.csproj" />
         <ProjectReference Include="..\CinemaCatalog.Domain\CinemaCatalog.Domain.csproj"/>
     </ItemGroup>
 

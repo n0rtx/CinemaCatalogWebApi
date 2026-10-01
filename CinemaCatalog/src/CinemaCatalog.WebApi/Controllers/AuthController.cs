@@ -1,14 +1,18 @@
 using CinemaCatalog.Application.DTOs;
-using CinemaCatalog.Application.Interfaces;
 using CinemaCatalog.Application.Interfaces.Auth;
+using CinemaCatalog.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaCatalog.WebApi.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(
+    IAuthService authService,
+    ISessionService sessionService) : ControllerBase
 {
+    private const string SessionUserKey = "auth_user";
+
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request, CancellationToken ct)
     {
@@ -17,12 +21,20 @@ public class AuthController(IAuthService authService) : ControllerBase
         try
         {
             var (user, token) = await authService.RegisterAsync(request.Login, request.Password, ct);
-            return Ok(new AuthResponse
+            var response = new AuthResponse
             {
                 Id = user.Id,
                 Login = user.Login,
                 IdToken = token
+            };
+
+            sessionService.Set(SessionUserKey, new SessionUserDto
+            {
+                Id = user.Id,
+                Login = user.Login
             });
+
+            return Ok(response);
         }
         catch (InvalidOperationException ex)
         {
@@ -42,12 +54,20 @@ public class AuthController(IAuthService authService) : ControllerBase
         try
         {
             var (user, token) = await authService.LoginAsync(request.Login, request.Password, ct);
-            return Ok(new AuthResponse
+            var response = new AuthResponse
             {
                 Id = user.Id,
                 Login = user.Login,
                 IdToken = token
+            };
+
+            sessionService.Set(SessionUserKey, new SessionUserDto
+            {
+                Id = user.Id,
+                Login = user.Login
             });
+
+            return Ok(response);
         }
         catch (UnauthorizedAccessException)
         {
@@ -57,5 +77,28 @@ public class AuthController(IAuthService authService) : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+    }
+
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        sessionService.Remove(SessionUserKey);
+        return NoContent();
+    }
+
+    [HttpGet("me")]
+    public ActionResult<object> Me()
+    {
+        var user = sessionService.Get<SessionUserDto>(SessionUserKey);
+        if (user is null)
+            return Unauthorized();
+
+        return Ok(user);
+    }
+
+    private sealed class SessionUserDto
+    {
+        public string Id { get; set; } = "";
+        public string Login { get; set; } = "";
     }
 }
