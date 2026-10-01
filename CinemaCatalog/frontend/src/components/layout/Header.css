@@ -1,0 +1,140 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-height: 64px;
+  padding-block: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.header__logo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+}
+
+.header__logo-text {
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+}
+
+.header__logo-text span {
+  color: var(--accent);
+}
+
+.header__nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.header__nav a {
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color var(--transition), background var(--transition);
+}
+
+.header__nav a:hover,
+.header__nav a.active {
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+.header__nav a.active {
+  color: var(--accent);
+}
+
+.header__search {
+  flex: 1;
+  min-width: 180px;
+  max-width: 420px;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.header__auth-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.header__auth-links a:hover {
+  color: var(--accent);
+}
+
+.header__register {
+  background: var(--accent);
+  color: #fff !important;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-sm);
+}
+
+.header__register:hover {
+  background: var(--accent-hover);
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.header__login {
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.header__logout {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.header__logout:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .header__nav {
+    order: 3;
+    width: 100%;
+  }
+
+  .header__search {
+    order: 4;
+    max-width: none;
+    width: 100%;
+  }
+}

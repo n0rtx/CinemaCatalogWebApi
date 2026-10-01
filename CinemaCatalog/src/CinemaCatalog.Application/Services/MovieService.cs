@@ -38,7 +38,9 @@ public class MovieService(
             throw new InvalidOperationException("Movie already exists");
 
         if (posterFile is not null && posterFile.Length > 0)
+        {
             movie.Poster = await FileStorageService.SaveFileAsync(posterFile, cancellationToken);
+        }
 
         await MovieRepository.AddAsync(movie, cancellationToken);
     }
@@ -60,10 +62,23 @@ public class MovieService(
         existingMovie.Director = movie.Director;
         existingMovie.Genre = movie.Genre;
         existingMovie.ReleaseYear = movie.ReleaseYear;
-        existingMovie.Poster = await FileStorageService.UpdateFileAsync(
-            existingMovie.Poster,
-            posterFile,
-            cancellationToken);
+
+        if (posterFile is not null && posterFile.Length > 0)
+        {
+            existingMovie.Poster = await FileStorageService.UpdateFileAsync(
+                existingMovie.Poster,
+                posterFile,
+                cancellationToken);
+        }
+        else if (!string.IsNullOrWhiteSpace(movie.Poster))
+        {
+            var url = movie.Poster.Trim();
+            if (!string.Equals(existingMovie.Poster, url, StringComparison.Ordinal))
+            {
+                FileStorageService.DeleteFile(existingMovie.Poster);
+                existingMovie.Poster = url;
+            }
+        }
 
         await MovieRepository.UpdateAsync(existingMovie, cancellationToken);
         return existingMovie;

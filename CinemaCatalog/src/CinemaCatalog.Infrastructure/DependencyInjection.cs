@@ -25,16 +25,37 @@ public static class DependencyInjection
         var credentialsPath = firebaseSection["CredentialsPath"]
                               ?? throw new InvalidOperationException("Firebase:CredentialsPath is missing");
 
+        if (!Path.IsPathRooted(credentialsPath))
+        {
+            credentialsPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, credentialsPath));
+            if (!File.Exists(credentialsPath))
+            {
+                var contentRoot = configuration["ContentRoot"]
+                                  ?? Directory.GetCurrentDirectory();
+                credentialsPath = Path.GetFullPath(Path.Combine(contentRoot, firebaseSection["CredentialsPath"]!));
+            }
+        }
+
+        if (!File.Exists(credentialsPath))
+            throw new FileNotFoundException(
+                $"Firebase credentials file not found: {credentialsPath}");
+
+        var credential = GoogleCredential.FromFile(credentialsPath);
+
         if (FirebaseApp.DefaultInstance is null)
         {
             FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile(credentialsPath),
+                Credential = credential,
                 ProjectId = projectId
             });
         }
 
-        services.AddSingleton(_ => FirestoreDb.Create(projectId));
+        services.AddSingleton(_ => new FirestoreDbBuilder
+        {
+            ProjectId = projectId,
+            Credential = credential
+        }.Build());
 
         services.AddScoped<IMovieRepository, FirestoreMovieRepository>();
         services.AddScoped<IUserRepository, FirestoreUserRepository>();

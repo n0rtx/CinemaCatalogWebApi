@@ -1,19 +1,24 @@
 using System.Net.Http.Json;
-using CinemaCatalog.Application.Interfaces;
 using CinemaCatalog.Application.Interfaces.Auth;
 using CinemaCatalog.Domain.Entities;
 using CinemaCatalog.Domain.Interfaces;
 using FirebaseAdmin.Auth;
+using Microsoft.Extensions.Configuration;
 
 namespace CinemaCatalog.Infrastructure.Services;
 
 public class FirebaseAuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
+    private readonly string _webApiKey;
 
-    public FirebaseAuthService(IUserRepository userRepository)
+    public FirebaseAuthService(IUserRepository userRepository, IConfiguration configuration)
     {
         _userRepository = userRepository;
+        _webApiKey = configuration["Firebase:WebApiKey"]
+                     ?? Environment.GetEnvironmentVariable("FIREBASE_WEB_API_KEY")
+                     ?? throw new InvalidOperationException(
+                         "Firebase:WebApiKey is missing (appsettings or FIREBASE_WEB_API_KEY)");
     }
 
     public async Task<(User User, string IdToken)> RegisterAsync(string login, string password, CancellationToken ct)
@@ -56,17 +61,16 @@ public class FirebaseAuthService : IAuthService
         return (user, idToken);
     }
 
-    private static async Task<string> SignInWithPasswordAsync(string email, string password, CancellationToken ct)
+    private async Task<string> SignInWithPasswordAsync(string email, string password, CancellationToken ct)
     {
-        var apiKey = Environment.GetEnvironmentVariable("FIREBASE_WEB_API_KEY")
-                     ?? throw new InvalidOperationException("FIREBASE_WEB_API_KEY is not set");
-
         using var http = new HttpClient();
-        var url = $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={apiKey}";
+        var url = $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={_webApiKey}";
         var body = new { email, password, returnSecureToken = true };
 
         var response = await http.PostAsJsonAsync(url, body, ct);
-        response.EnsureSuccessStatusCode();
+
+        if (!response.IsSuccessStatusCode)
+            throw new UnauthorizedAccessException("Invalid login or password");
 
         var json = await response.Content.ReadFromJsonAsync<SignInResponse>(cancellationToken: ct)
                    ?? throw new UnauthorizedAccessException("Invalid credentials");

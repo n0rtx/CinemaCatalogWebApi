@@ -14,10 +14,23 @@ public static class MovieMappingExtensions
             Director = movie.Director,
             Genre = movie.Genre,
             ReleaseYear = movie.ReleaseYear,
-            Poster = string.IsNullOrEmpty(movie.Poster) || baseUrl is null
-                ? movie.Poster
-                : $"{baseUrl}{movie.Poster}"
+            Poster = ResolvePoster(movie.Poster, baseUrl)
         };
+    }
+
+    private static string? ResolvePoster(string? poster, string? baseUrl)
+    {
+        if (string.IsNullOrWhiteSpace(poster) || poster is "N/A" or "Unknown")
+            return null;
+
+        if (poster.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+            || poster.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            return poster;
+
+        if (string.IsNullOrEmpty(baseUrl))
+            return poster;
+
+        return $"{baseUrl.TrimEnd('/')}{(poster.StartsWith('/') ? poster : "/" + poster)}";
     }
 
     public static Movie ToEntity(this CreateMovieDto dto)
@@ -41,7 +54,8 @@ public static class MovieMappingExtensions
             Plot = dto.Plot,
             Director = dto.Director,
             Genre = dto.Genre,
-            ReleaseYear = dto.ReleaseYear
+            ReleaseYear = dto.ReleaseYear,
+            Poster = string.IsNullOrWhiteSpace(dto.PosterUrl) ? null : dto.PosterUrl.Trim()
         };
     }
 }

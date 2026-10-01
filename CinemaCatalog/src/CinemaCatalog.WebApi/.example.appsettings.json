@@ -1,7 +1,8 @@
 {
   "Firebase": {
     "ProjectId": "firebase-project-id",
-    "CredentialsPath": "../secrets/firebase.json"
+    "CredentialsPath": "secrets/firebase.json",
+    "WebApiKey": "AIzaSy...."
   },
   "Logging": {
     "LogLevel": {

@@ -1,0 +1,71 @@
+.movie-detail {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 720px) {
+  .movie-detail {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+.movie-detail__poster {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--poster-placeholder);
+  aspect-ratio: 2 / 3;
+  max-width: 320px;
+}
+
+.movie-detail__poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.movie-detail__placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-size: 5rem;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.movie-detail__genre {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+}
+
+.movie-detail h1 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.movie-detail__meta {
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.movie-detail__plot {
+  color: var(--text-soft);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  margin-bottom: 1.75rem;
+  max-width: 56ch;
+}
+
+.movie-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}

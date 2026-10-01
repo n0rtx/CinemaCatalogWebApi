@@ -12,6 +12,7 @@ public class MoviesController(IMovieService movieService, IEntityDisplayer<Movie
     private string BaseUrl => $"{Request.Scheme}://{Request.Host}";
 
     private IMovieService MovieService { get; } = movieService;
+
     private IEntityDisplayer<Movie> EntityDisplayer { get; } = entityDisplayer;
 
     [HttpGet]

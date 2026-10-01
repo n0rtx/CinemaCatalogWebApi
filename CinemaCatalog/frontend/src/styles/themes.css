@@ -1,0 +1,39 @@
+/* Dark — Kinogo-like */
+[data-theme='dark'] {
+  --bg: #0b0b0f;
+  --bg-elevated: #14141a;
+  --bg-card: #1a1a22;
+  --bg-input: #121218;
+  --border: #2a2a35;
+  --text: #f2f2f5;
+  --text-muted: #9a9aab;
+  --text-soft: #c8c8d4;
+  --header-bg: rgba(11, 11, 15, 0.92);
+  --overlay: rgba(0, 0, 0, 0.65);
+  --danger: #ff6b6b;
+  --danger-bg: rgba(255, 107, 107, 0.12);
+  --success: #51cf66;
+  --success-bg: rgba(81, 207, 102, 0.12);
+  --poster-placeholder: #22222c;
+  color-scheme: dark;
+}
+
+/* Light */
+[data-theme='light'] {
+  --bg: #f4f5f7;
+  --bg-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --bg-input: #f0f1f4;
+  --border: #e2e4ea;
+  --text: #16161d;
+  --text-muted: #6b6b7b;
+  --text-soft: #3a3a48;
+  --header-bg: rgba(255, 255, 255, 0.92);
+  --overlay: rgba(0, 0, 0, 0.45);
+  --danger: #d64545;
+  --danger-bg: rgba(214, 69, 69, 0.1);
+  --success: #2f9e44;
+  --success-bg: rgba(47, 158, 68, 0.1);
+  --poster-placeholder: #e8e9ef;
+  color-scheme: light;
+}

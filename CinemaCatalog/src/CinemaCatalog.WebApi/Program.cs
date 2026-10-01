@@ -7,6 +7,18 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "http://127.0.0.1:5173",
+                "https://cinemacatalog.vercel.app"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -18,6 +30,8 @@ if (app.Environment.IsDevelopment())
         options.WithTheme(ScalarTheme.DeepSpace);
     });
 }
+
+app.UseCors();
 
 app.UseStaticFiles();
 app.UseHttpsRedirection();
