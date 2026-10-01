@@ -6,6 +6,7 @@ using CinemaCatalog.Domain.Interfaces;
 using CinemaCatalog.Infrastructure.Firebase;
 using CinemaCatalog.Infrastructure.Providers;
 using CinemaCatalog.Infrastructure.Repositories;
+using CinemaCatalog.Infrastructure.Seed;
 using CinemaCatalog.Infrastructure.Services;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
@@ -63,6 +64,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, FirebaseAuthService>();
         services.AddScoped<IFileStorageService, PosterStorageService>();
         services.AddScoped<IEntityDisplayer<Movie>, MovieDisplayer>();
+        services.AddScoped<IDataSeeder, FirestoreDataSeeder>();
 
         string omdbApiKey = configuration["Omdb:ApiKey"]
                             ?? throw new InvalidOperationException("No Omdb ApiKey was found");

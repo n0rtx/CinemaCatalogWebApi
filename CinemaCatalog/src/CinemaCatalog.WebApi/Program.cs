@@ -1,3 +1,4 @@
+using CinemaCatalog.Application.Interfaces;
 using CinemaCatalog.Infrastructure;
 using Scalar.AspNetCore;
 
@@ -23,6 +24,13 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
+    await seeder.SeedAsync();
+}
+
+if (app.Environment.IsDevelopment())
+{
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
@@ -32,7 +40,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
-
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.MapControllers();
