@@ -8,6 +8,12 @@ import {
 } from 'react';
 import type { AuthUser } from '../types/auth';
 import * as authApi from '../api/auth';
+import {
+  COOKIE_MAX_AGE,
+  getCookie,
+  removeCookie,
+  setCookie,
+} from '../utils/cookies';
 
 interface AuthContextValue {
   user: AuthUser | null;
@@ -17,16 +23,53 @@ interface AuthContextValue {
   logout: () => void;
 }
 
+interface StoredAuth extends AuthUser {
+  expiresAt: number; // unix ms
+}
+
 const AuthContext = createContext<AuthContextValue | null>(null);
-const STORAGE_KEY = 'cinema_auth';
+const AUTH_COOKIE = 'cinema_auth';
 
 function loadUser(): AuthUser | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as AuthUser;
+    const raw = getCookie(AUTH_COOKIE);
+    if (!raw) {
+      // миграция со старого localStorage
+      const legacy = localStorage.getItem('cinema_auth');
+      if (legacy) {
+        localStorage.removeItem('cinema_auth');
+        const parsed = JSON.parse(legacy) as AuthUser;
+        if (parsed?.token) {
+          persistToCookie({
+            ...parsed,
+            expiresAt: Date.now() + COOKIE_MAX_AGE.auth * 1000,
+          });
+          return { id: parsed.id, login: parsed.login, token: parsed.token };
+        }
+      }
+      return null;
+    }
+
+    const data = JSON.parse(raw) as StoredAuth;
+    if (!data?.token || !data.expiresAt) return null;
+
+    if (Date.now() >= data.expiresAt) {
+      removeCookie(AUTH_COOKIE);
+      return null;
+    }
+
+    return { id: data.id, login: data.login, token: data.token };
   } catch {
+    removeCookie(AUTH_COOKIE);
     return null;
+  }
+}
+
+function persistToCookie(data: StoredAuth | null): void {
+  if (data) {
+    setCookie(AUTH_COOKIE, JSON.stringify(data), COOKIE_MAX_AGE.auth);
+  } else {
+    removeCookie(AUTH_COOKIE);
   }
 }
 
@@ -35,8 +78,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const persist = useCallback((u: AuthUser | null) => {
     setUser(u);
-    if (u) localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
-    else localStorage.removeItem(STORAGE_KEY);
+    if (u) {
+      persistToCookie({
+        ...u,
+        expiresAt: Date.now() + COOKIE_MAX_AGE.auth * 1000,
+      });
+    } else {
+      persistToCookie(null);
+    }
   }, []);
 
   const login = useCallback(

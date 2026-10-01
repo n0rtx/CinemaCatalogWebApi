@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { COOKIE_MAX_AGE, getCookie, setCookie } from '../utils/cookies';
 
 type Theme = 'dark' | 'light';
 
@@ -17,12 +18,19 @@ interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
-
-const STORAGE_KEY = 'cinema_theme';
+const THEME_COOKIE = 'cinema_theme';
 
 function getInitialTheme(): Theme {
-  const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
+  const saved = getCookie(THEME_COOKIE);
   if (saved === 'dark' || saved === 'light') return saved;
+
+  // миграция со старого localStorage
+  const legacy = localStorage.getItem('cinema_theme') as Theme | null;
+  if (legacy === 'dark' || legacy === 'light') {
+    localStorage.removeItem('cinema_theme');
+    return legacy;
+  }
+
   return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 }
 
@@ -31,7 +39,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(STORAGE_KEY, theme);
+    setCookie(THEME_COOKIE, theme, COOKIE_MAX_AGE.theme);
   }, [theme]);
 
   const setTheme = useCallback((t: Theme) => setThemeState(t), []);

@@ -1,4 +1,7 @@
+import { getCookie, removeCookie } from '../utils/cookies';
+
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
+const AUTH_COOKIE = 'cinema_auth';
 
 export class ApiError extends Error {
   constructor(
@@ -12,9 +15,18 @@ export class ApiError extends Error {
 
 function getToken(): string | null {
   try {
-    const raw = localStorage.getItem('cinema_auth');
+    const raw = getCookie(AUTH_COOKIE);
     if (!raw) return null;
-    return (JSON.parse(raw) as { token: string }).token ?? null;
+
+    const data = JSON.parse(raw) as { token?: string; expiresAt?: number };
+    if (!data?.token) return null;
+
+    if (data.expiresAt && Date.now() >= data.expiresAt) {
+      removeCookie(AUTH_COOKIE);
+      return null;
+    }
+
+    return data.token;
   } catch {
     return null;
   }
@@ -44,14 +56,18 @@ export async function apiFetch<T>(
       const text = await res.text();
       if (text) {
         try {
-          const json = JSON.parse(text) as { title?: string; detail?: string; message?: string };
+          const json = JSON.parse(text) as {
+            title?: string;
+            detail?: string;
+            message?: string;
+          };
           message = json.detail ?? json.title ?? json.message ?? text;
         } catch {
           message = text;
         }
       }
     } catch {
-      /* ignore */
+
     }
     throw new ApiError(message, res.status);
   }
