@@ -21,6 +21,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpContextAccessor();
+        
         var firebaseSection = configuration.GetSection(FirebaseSettings.SectionName);
         var projectId = firebaseSection["ProjectId"]
                         ?? throw new InvalidOperationException("Firebase:ProjectId is missing");
