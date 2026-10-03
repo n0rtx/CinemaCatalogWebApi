@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/Button';
 import './Pagination.css';
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export function Pagination({ page, totalPages, onChange }: Props) {
+  const { t } = useTranslation();
   if (totalPages <= 1) return null;
 
   return (
@@ -17,7 +19,7 @@ export function Pagination({ page, totalPages, onChange }: Props) {
         disabled={page <= 1}
         onClick={() => onChange(page - 1)}
       >
-        ← Назад
+        {t('pagination.prev')}
       </Button>
       <span className="pagination__info">
         {page} / {totalPages}
@@ -27,7 +29,7 @@ export function Pagination({ page, totalPages, onChange }: Props) {
         disabled={page >= totalPages}
         onClick={() => onChange(page + 1)}
       >
-        Вперёд →
+        {t('pagination.next')}
       </Button>
     </div>
   );

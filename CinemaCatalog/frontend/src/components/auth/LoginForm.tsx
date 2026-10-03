@@ -1,10 +1,12 @@
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../ui/Button';
 import './AuthForm.css';
 
 export function LoginForm() {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
   const [loginName, setLoginName] = useState('');
@@ -20,7 +22,7 @@ export function LoginForm() {
       await login(loginName.trim(), password);
       navigate('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка входа');
+      setError(err instanceof Error ? err.message : t('auth.loginError'));
     } finally {
       setLoading(false);
     }
@@ -28,13 +30,13 @@ export function LoginForm() {
 
   return (
     <form className="auth-form" onSubmit={onSubmit}>
-      <h1>Вход</h1>
-      <p className="auth-form__subtitle">Войдите в аккаунт CinemaCatalog</p>
+      <h1>{t('auth.loginTitle')}</h1>
+      <p className="auth-form__subtitle">{t('auth.loginSubtitle')}</p>
 
       {error && <div className="error-banner">{error}</div>}
 
       <label>
-        <span>Логин</span>
+        <span>{t('auth.login')}</span>
         <input
           required
           autoComplete="username"
@@ -44,7 +46,7 @@ export function LoginForm() {
       </label>
 
       <label>
-        <span>Пароль</span>
+        <span>{t('auth.password')}</span>
         <input
           type="password"
           required
@@ -55,11 +57,11 @@ export function LoginForm() {
       </label>
 
       <Button type="submit" fullWidth disabled={loading}>
-        {loading ? 'Вход…' : 'Войти'}
+        {loading ? t('auth.submittingLogin') : t('auth.submitLogin')}
       </Button>
 
       <p className="auth-form__footer">
-        Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
+        {t('auth.noAccount')} <Link to="/register">{t('auth.registerLink')}</Link>
       </p>
     </form>
   );

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Movie } from '../../types/movie';
 import { MovieCard } from './MovieCard';
 import './MovieGrid.css';
@@ -7,11 +8,13 @@ interface Props {
 }
 
 export function MovieGrid({ movies }: Props) {
+  const { t } = useTranslation();
+
   if (movies.length === 0) {
     return (
       <div className="empty-state">
-        <h2>Фильмов пока нет</h2>
-        <p>Добавьте первый фильм в разделе «Управление» или найдите через поиск (OMDb).</p>
+        <h2>{t('movie.emptyTitle')}</h2>
+        <p>{t('movie.emptyHint')}</p>
       </div>
     );
   }

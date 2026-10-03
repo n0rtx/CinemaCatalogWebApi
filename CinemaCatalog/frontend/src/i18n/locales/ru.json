@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "catalog": "Каталог",
+    "admin": "Управление",
+    "login": "Вход",
+    "register": "Регистрация",
+    "logout": "Выйти"
+  },
+  "header": {
+    "logo": "CinemaCatalog"
+  },
+  "footer": {
+    "copyright": "© {{year}} CinemaCatalog — учебный каталог фильмов",
+    "stack": "API · Firestore · React"
+  },
+  "home": {
+    "title": "Каталог фильмов",
+    "subtitle": "Смотри, ищи и добавляй фильмы в свою коллекцию",
+    "loadError": "Не удалось загрузить каталог"
+  },
+  "search": {
+    "placeholder": "Найти фильм…",
+    "ariaLabel": "Поиск фильма",
+    "submitAria": "Искать",
+    "title": "Поиск: «{{title}}»",
+    "emptyTitle": "Введите название в поиске",
+    "notFound": "Ничего не найдено",
+    "tryAgain": "Попробуйте другое название или добавьте фильм вручную.",
+    "searching": "Ищем фильм…",
+    "backToCatalog": "В каталог",
+    "addMovie": "Добавить фильм"
+  },
+  "movie": {
+    "emptyTitle": "Фильмов пока нет",
+    "emptyHint": "Добавьте первый фильм в разделе «Управление» или найдите через поиск (OMDb).",
+    "notFound": "Фильм не найден",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "deleting": "Удаление…",
+    "back": "← Назад",
+    "editTitle": "Редактировать фильм",
+    "update": "Обновить",
+    "confirmDelete": "Удалить этот фильм?",
+    "deleteError": "Ошибка удаления"
+  },
+  "admin": {
+    "title": "Управление каталогом",
+    "subtitle": "Создание и удаление фильмов",
+    "addMovie": "+ Добавить фильм",
+    "loadError": "Ошибка загрузки",
+    "movieAdded": "Фильм добавлен",
+    "movieDeleted": "Фильм удалён",
+    "deleteError": "Ошибка удаления",
+    "confirmDelete": "Удалить «{{title}}»?",
+    "colTitle": "Название",
+    "colYear": "Год",
+    "colGenre": "Жанр",
+    "colDirector": "Режиссёр",
+    "empty": "Каталог пуст",
+    "open": "Открыть",
+    "delete": "Удалить",
+    "newMovie": "Новый фильм",
+    "create": "Создать"
+  },
+  "form": {
+    "title": "Название *",
+    "plot": "Сюжет *",
+    "director": "Режиссёр *",
+    "genre": "Жанр *",
+    "year": "Год *",
+    "posterFile": "Файл постера",
+    "posterUrl": "URL постера",
+    "posterPreview": "Превью постера",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "saving": "Сохранение…",
+    "saveError": "Ошибка сохранения"
+  },
+  "auth": {
+    "loginTitle": "Вход",
+    "loginSubtitle": "Войдите в аккаунт CinemaCatalog",
+    "registerTitle": "Регистрация",
+    "registerSubtitle": "Создайте аккаунт CinemaCatalog",
+    "login": "Логин",
+    "loginMin": "Логин (мин. 3 символа)",
+    "password": "Пароль",
+    "passwordMin": "Пароль (мин. 6 символов)",
+    "submitLogin": "Войти",
+    "submittingLogin": "Вход…",
+    "submitRegister": "Зарегистрироваться",
+    "submittingRegister": "Регистрация…",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Уже есть аккаунт?",
+    "registerLink": "Зарегистрироваться",
+    "loginLink": "Войти",
+    "loginError": "Ошибка входа",
+    "registerError": "Ошибка регистрации",
+    "passwordTooShort": "Пароль не менее 6 символов"
+  },
+  "pagination": {
+    "prev": "← Назад",
+    "next": "Вперёд →"
+  },
+  "loading": "Загрузка…",
+  "lang": {
+    "ru": "RU",
+    "en": "EN"
+  }
+}

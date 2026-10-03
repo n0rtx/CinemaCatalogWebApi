@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { createMovie, deleteMovie, getMovies } from '../api/movies';
 import type { Movie, MovieFormData } from '../types/movie';
 import { yearValue } from '../types/movie';
@@ -11,6 +12,7 @@ import { Pagination } from '../components/movies/Pagination';
 import './AdminPage.css';
 
 export function AdminPage() {
+  const { t } = useTranslation();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -28,11 +30,11 @@ export function AdminPage() {
       setPage(data.page);
       setTotalPages(Math.max(1, data.totalPages));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка загрузки');
+      setError(err instanceof Error ? err.message : t('admin.loadError'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     void load(page);
@@ -41,19 +43,19 @@ export function AdminPage() {
   const handleCreate = async (data: MovieFormData) => {
     await createMovie(data);
     setCreateOpen(false);
-    setSuccess('Фильм добавлен');
+    setSuccess(t('admin.movieAdded'));
     await load(1);
     setPage(1);
   };
 
   const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Удалить «${title}»?`)) return;
+    if (!confirm(t('admin.confirmDelete', { title }))) return;
     try {
       await deleteMovie(id);
-      setSuccess('Фильм удалён');
+      setSuccess(t('admin.movieDeleted'));
       await load(page);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка удаления');
+      setError(err instanceof Error ? err.message : t('admin.deleteError'));
     }
   };
 
@@ -61,10 +63,10 @@ export function AdminPage() {
     <>
       <div className="admin-header">
         <div>
-          <h1 className="section-title">Управление каталогом</h1>
-          <p className="admin-header__sub">Создание и удаление фильмов</p>
+          <h1 className="section-title">{t('admin.title')}</h1>
+          <p className="admin-header__sub">{t('admin.subtitle')}</p>
         </div>
-        <Button onClick={() => setCreateOpen(true)}>+ Добавить фильм</Button>
+        <Button onClick={() => setCreateOpen(true)}>{t('admin.addMovie')}</Button>
       </div>
 
       {error && <div className="error-banner">{error}</div>}
@@ -77,10 +79,10 @@ export function AdminPage() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Название</th>
-                <th>Год</th>
-                <th>Жанр</th>
-                <th>Режиссёр</th>
+                <th>{t('admin.colTitle')}</th>
+                <th>{t('admin.colYear')}</th>
+                <th>{t('admin.colGenre')}</th>
+                <th>{t('admin.colDirector')}</th>
                 <th />
               </tr>
             </thead>
@@ -88,7 +90,7 @@ export function AdminPage() {
               {movies.length === 0 && (
                 <tr>
                   <td colSpan={5} className="admin-table__empty">
-                    Каталог пуст
+                    {t('admin.empty')}
                   </td>
                 </tr>
               )}
@@ -102,10 +104,10 @@ export function AdminPage() {
                   <td>{m.director}</td>
                   <td className="admin-table__actions">
                     <Link to={`/movies/${m.id}`}>
-                      <Button variant="ghost">Открыть</Button>
+                      <Button variant="ghost">{t('admin.open')}</Button>
                     </Link>
                     <Button variant="danger" onClick={() => handleDelete(m.id, m.title)}>
-                      Удалить
+                      {t('admin.delete')}
                     </Button>
                   </td>
                 </tr>
@@ -117,9 +119,9 @@ export function AdminPage() {
 
       <Pagination page={page} totalPages={totalPages} onChange={setPage} />
 
-      <Modal open={createOpen} title="Новый фильм" onClose={() => setCreateOpen(false)}>
+      <Modal open={createOpen} title={t('admin.newMovie')} onClose={() => setCreateOpen(false)}>
         <MovieForm
-          submitLabel="Создать"
+          submitLabel={t('admin.create')}
           onSubmit={handleCreate}
           onCancel={() => setCreateOpen(false)}
         />

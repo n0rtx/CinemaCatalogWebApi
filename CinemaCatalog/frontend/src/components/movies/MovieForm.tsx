@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Movie, MovieFormData } from '../../types/movie';
 import { yearValue } from '../../types/movie';
 import { Button } from '../ui/Button';
@@ -16,7 +17,8 @@ function isHttpUrl(value: string | null | undefined): boolean {
   return /^https?:\/\//i.test(value);
 }
 
-export function MovieForm({ initial, submitLabel = 'Сохранить', onSubmit, onCancel }: Props) {
+export function MovieForm({ initial, submitLabel, onSubmit, onCancel }: Props) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState(initial?.title ?? '');
   const [plot, setPlot] = useState(initial?.plot ?? '');
   const [director, setDirector] = useState(initial?.director ?? '');
@@ -30,6 +32,8 @@ export function MovieForm({ initial, submitLabel = 'Сохранить', onSubmi
   );
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const resolvedSubmitLabel = submitLabel ?? t('form.save');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -46,7 +50,7 @@ export function MovieForm({ initial, submitLabel = 'Сохранить', onSubmi
         posterUrl: posterUrl.trim() || undefined,
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка сохранения');
+      setError(err instanceof Error ? err.message : t('form.saveError'));
     } finally {
       setLoading(false);
     }
@@ -62,12 +66,12 @@ export function MovieForm({ initial, submitLabel = 'Сохранить', onSubmi
       {error && <div className="error-banner">{error}</div>}
 
       <label>
-        <span>Название *</span>
+        <span>{t('form.title')}</span>
         <input required minLength={1} maxLength={100} value={title} onChange={(e) => setTitle(e.target.value)} />
       </label>
 
       <label>
-        <span>Сюжет *</span>
+        <span>{t('form.plot')}</span>
         <textarea
           required
           minLength={10}
@@ -80,18 +84,18 @@ export function MovieForm({ initial, submitLabel = 'Сохранить', onSubmi
 
       <div className="movie-form__row">
         <label>
-          <span>Режиссёр *</span>
+          <span>{t('form.director')}</span>
           <input required value={director} onChange={(e) => setDirector(e.target.value)} />
         </label>
         <label>
-          <span>Жанр *</span>
+          <span>{t('form.genre')}</span>
           <input required value={genre} onChange={(e) => setGenre(e.target.value)} />
         </label>
       </div>
 
       <div className="movie-form__row">
         <label>
-          <span>Год *</span>
+          <span>{t('form.year')}</span>
           <input
             type="number"
             required
@@ -102,7 +106,7 @@ export function MovieForm({ initial, submitLabel = 'Сохранить', onSubmi
           />
         </label>
         <label>
-          <span>Файл постера</span>
+          <span>{t('form.posterFile')}</span>
           <input
             type="file"
             accept="image/*"
@@ -112,7 +116,7 @@ export function MovieForm({ initial, submitLabel = 'Сохранить', onSubmi
       </div>
 
       <label>
-        <span>URL постера</span>
+        <span>{t('form.posterUrl')}</span>
         <input
           type="url"
           placeholder="https://..."
@@ -123,18 +127,18 @@ export function MovieForm({ initial, submitLabel = 'Сохранить', onSubmi
 
       {previewSrc ? (
         <div className="movie-form__preview">
-          <img src={previewSrc} alt="Превью постера" />
+          <img src={previewSrc} alt={t('form.posterPreview')} />
         </div>
       ) : null}
 
       <div className="movie-form__actions">
         {onCancel && (
           <Button type="button" variant="secondary" onClick={onCancel}>
-            Отмена
+            {t('form.cancel')}
           </Button>
         )}
         <Button type="submit" disabled={loading}>
-          {loading ? 'Сохранение…' : submitLabel}
+          {loading ? t('form.saving') : resolvedSubmitLabel}
         </Button>
       </div>
     </form>

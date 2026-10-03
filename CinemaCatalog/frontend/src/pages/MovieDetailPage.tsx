@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { deleteMovie, getMovieById } from '../api/movies';
-import type { Movie } from '../types/movie';
+import { useTranslation } from 'react-i18next';
+import { deleteMovie, getMovieById, updateMovie } from '../api/movies';
+import type { Movie, MovieFormData } from '../types/movie';
 import { yearValue } from '../types/movie';
 import { Loading } from '../components/ui/Loading';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { MovieForm } from '../components/movies/MovieForm';
-import { updateMovie } from '../api/movies';
-import type { MovieFormData } from '../types/movie';
 import './MovieDetailPage.css';
 
 export function MovieDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
@@ -30,7 +30,7 @@ export function MovieDetailPage() {
         const data = await getMovieById(id);
         if (!cancelled) setMovie(data);
       } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : 'Фильм не найден');
+        if (!cancelled) setError(err instanceof Error ? err.message : t('movie.notFound'));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -38,7 +38,7 @@ export function MovieDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, t]);
 
   const handleUpdate = async (data: MovieFormData) => {
     if (!id) return;
@@ -49,13 +49,13 @@ export function MovieDetailPage() {
   };
 
   const handleDelete = async () => {
-    if (!id || !confirm('Удалить этот фильм?')) return;
+    if (!id || !confirm(t('movie.confirmDelete'))) return;
     setDeleting(true);
     try {
       await deleteMovie(id);
       navigate('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка удаления');
+      setError(err instanceof Error ? err.message : t('movie.deleteError'));
       setDeleting(false);
     }
   };
@@ -64,9 +64,9 @@ export function MovieDetailPage() {
   if (error || !movie) {
     return (
       <div className="empty-state">
-        <h2>{error || 'Фильм не найден'}</h2>
+        <h2>{error || t('movie.notFound')}</h2>
         <Link to="/">
-          <Button variant="secondary">В каталог</Button>
+          <Button variant="secondary">{t('search.backToCatalog')}</Button>
         </Link>
       </div>
     );
@@ -94,21 +94,21 @@ export function MovieDetailPage() {
 
         <div className="movie-detail__actions">
           <Button variant="secondary" onClick={() => setEditOpen(true)}>
-            Редактировать
+            {t('movie.edit')}
           </Button>
           <Button variant="danger" onClick={handleDelete} disabled={deleting}>
-            {deleting ? 'Удаление…' : 'Удалить'}
+            {deleting ? t('movie.deleting') : t('movie.delete')}
           </Button>
           <Link to="/">
-            <Button variant="ghost">← Назад</Button>
+            <Button variant="ghost">{t('movie.back')}</Button>
           </Link>
         </div>
       </div>
 
-      <Modal open={editOpen} title="Редактировать фильм" onClose={() => setEditOpen(false)}>
+      <Modal open={editOpen} title={t('movie.editTitle')} onClose={() => setEditOpen(false)}>
         <MovieForm
           initial={movie}
-          submitLabel="Обновить"
+          submitLabel={t('movie.update')}
           onSubmit={handleUpdate}
           onCancel={() => setEditOpen(false)}
         />

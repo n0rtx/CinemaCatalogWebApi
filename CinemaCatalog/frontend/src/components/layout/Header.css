@@ -138,3 +138,22 @@
     width: 100%;
   }
 }
+
+.header__lang {
+  min-width: 2.4rem;
+  height: 2.2rem;
+  padding: 0 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-soft);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.header__lang:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}

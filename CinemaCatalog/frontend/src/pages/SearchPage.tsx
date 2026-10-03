@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { searchMovie } from '../api/movies';
 import type { Movie } from '../types/movie';
 import { MovieCard } from '../components/movies/MovieCard';
@@ -7,6 +8,7 @@ import { Loading } from '../components/ui/Loading';
 import { Button } from '../components/ui/Button';
 
 export function SearchPage() {
+  const { t } = useTranslation();
   const [params] = useSearchParams();
   const title = params.get('title')?.trim() ?? '';
   const [movie, setMovie] = useState<Movie | null>(null);
@@ -25,7 +27,7 @@ export function SearchPage() {
         if (!cancelled) setMovie(data);
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Ничего не найдено');
+          setError(err instanceof Error ? err.message : t('search.notFound'));
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -34,14 +36,14 @@ export function SearchPage() {
     return () => {
       cancelled = true;
     };
-  }, [title]);
+  }, [title, t]);
 
   if (!title) {
     return (
       <div className="empty-state">
-        <h2>Введите название в поиске</h2>
+        <h2>{t('search.emptyTitle')}</h2>
         <Link to="/">
-          <Button variant="secondary">В каталог</Button>
+          <Button variant="secondary">{t('search.backToCatalog')}</Button>
         </Link>
       </div>
     );
@@ -49,14 +51,14 @@ export function SearchPage() {
 
   return (
     <>
-      <h1 className="section-title">Поиск: «{title}»</h1>
-      {loading && <Loading label="Ищем фильм…" />}
+      <h1 className="section-title">{t('search.title', { title })}</h1>
+      {loading && <Loading label={t('search.searching')} />}
       {error && (
         <div className="empty-state">
           <h2>{error}</h2>
-          <p>Попробуйте другое название или добавьте фильм вручную.</p>
+          <p>{t('search.tryAgain')}</p>
           <Link to="/admin">
-            <Button>Добавить фильм</Button>
+            <Button>{t('search.addMovie')}</Button>
           </Link>
         </div>
       )}

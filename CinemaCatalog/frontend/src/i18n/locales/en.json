@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "catalog": "Catalog",
+    "admin": "Admin",
+    "login": "Sign in",
+    "register": "Sign up",
+    "logout": "Log out"
+  },
+  "header": {
+    "logo": "CinemaCatalog"
+  },
+  "footer": {
+    "copyright": "© {{year}} CinemaCatalog — educational movie catalog",
+    "stack": "API · Firestore · React"
+  },
+  "home": {
+    "title": "Movie catalog",
+    "subtitle": "Browse, search and add movies to your collection",
+    "loadError": "Failed to load catalog"
+  },
+  "search": {
+    "placeholder": "Find a movie…",
+    "ariaLabel": "Movie search",
+    "submitAria": "Search",
+    "title": "Search: “{{title}}”",
+    "emptyTitle": "Enter a title in the search box",
+    "notFound": "Nothing found",
+    "tryAgain": "Try another title or add a movie manually.",
+    "searching": "Searching…",
+    "backToCatalog": "Back to catalog",
+    "addMovie": "Add movie"
+  },
+  "movie": {
+    "emptyTitle": "No movies yet",
+    "emptyHint": "Add the first movie in the Admin section or find one via search (OMDb).",
+    "notFound": "Movie not found",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "back": "← Back",
+    "editTitle": "Edit movie",
+    "update": "Update",
+    "confirmDelete": "Delete this movie?",
+    "deleteError": "Delete failed"
+  },
+  "admin": {
+    "title": "Catalog management",
+    "subtitle": "Create and delete movies",
+    "addMovie": "+ Add movie",
+    "loadError": "Failed to load",
+    "movieAdded": "Movie added",
+    "movieDeleted": "Movie deleted",
+    "deleteError": "Delete failed",
+    "confirmDelete": "Delete “{{title}}”?",
+    "colTitle": "Title",
+    "colYear": "Year",
+    "colGenre": "Genre",
+    "colDirector": "Director",
+    "empty": "Catalog is empty",
+    "open": "Open",
+    "delete": "Delete",
+    "newMovie": "New movie",
+    "create": "Create"
+  },
+  "form": {
+    "title": "Title *",
+    "plot": "Plot *",
+    "director": "Director *",
+    "genre": "Genre *",
+    "year": "Year *",
+    "posterFile": "Poster file",
+    "posterUrl": "Poster URL",
+    "posterPreview": "Poster preview",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "saveError": "Save failed"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "loginSubtitle": "Sign in to your CinemaCatalog account",
+    "registerTitle": "Sign up",
+    "registerSubtitle": "Create a CinemaCatalog account",
+    "login": "Username",
+    "loginMin": "Username (min. 3 characters)",
+    "password": "Password",
+    "passwordMin": "Password (min. 6 characters)",
+    "submitLogin": "Sign in",
+    "submittingLogin": "Signing in…",
+    "submitRegister": "Sign up",
+    "submittingRegister": "Signing up…",
+    "noAccount": "No account?",
+    "hasAccount": "Already have an account?",
+    "registerLink": "Sign up",
+    "loginLink": "Sign in",
+    "loginError": "Sign-in failed",
+    "registerError": "Registration failed",
+    "passwordTooShort": "Password must be at least 6 characters"
+  },
+  "pagination": {
+    "prev": "← Prev",
+    "next": "Next →"
+  },
+  "loading": "Loading…",
+  "lang": {
+    "ru": "RU",
+    "en": "EN"
+  }
+}

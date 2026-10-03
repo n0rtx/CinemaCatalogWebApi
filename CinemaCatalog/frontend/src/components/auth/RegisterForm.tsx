@@ -1,10 +1,12 @@
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../ui/Button';
 import './AuthForm.css';
 
 export function RegisterForm() {
+  const { t } = useTranslation();
   const { register } = useAuth();
   const navigate = useNavigate();
   const [loginName, setLoginName] = useState('');
@@ -16,7 +18,7 @@ export function RegisterForm() {
     e.preventDefault();
     setError('');
     if (password.length < 6) {
-      setError('Пароль не менее 6 символов');
+      setError(t('auth.passwordTooShort'));
       return;
     }
     setLoading(true);
@@ -24,7 +26,7 @@ export function RegisterForm() {
       await register(loginName.trim(), password);
       navigate('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка регистрации');
+      setError(err instanceof Error ? err.message : t('auth.registerError'));
     } finally {
       setLoading(false);
     }
@@ -32,13 +34,13 @@ export function RegisterForm() {
 
   return (
     <form className="auth-form" onSubmit={onSubmit}>
-      <h1>Регистрация</h1>
-      <p className="auth-form__subtitle">Создайте аккаунт CinemaCatalog</p>
+      <h1>{t('auth.registerTitle')}</h1>
+      <p className="auth-form__subtitle">{t('auth.registerSubtitle')}</p>
 
       {error && <div className="error-banner">{error}</div>}
 
       <label>
-        <span>Логин (мин. 3 символа)</span>
+        <span>{t('auth.loginMin')}</span>
         <input
           required
           minLength={3}
@@ -50,7 +52,7 @@ export function RegisterForm() {
       </label>
 
       <label>
-        <span>Пароль (мин. 6 символов)</span>
+        <span>{t('auth.passwordMin')}</span>
         <input
           type="password"
           required
@@ -63,11 +65,11 @@ export function RegisterForm() {
       </label>
 
       <Button type="submit" fullWidth disabled={loading}>
-        {loading ? 'Регистрация…' : 'Зарегистрироваться'}
+        {loading ? t('auth.submittingRegister') : t('auth.submitRegister')}
       </Button>
 
       <p className="auth-form__footer">
-        Уже есть аккаунт? <Link to="/login">Войти</Link>
+        {t('auth.hasAccount')} <Link to="/login">{t('auth.loginLink')}</Link>
       </p>
     </form>
   );
